@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
-@Table(name = "products")
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +22,15 @@ public class Product {
     private Double price;
     private String imageUrl;
 
+    @OneToMany(mappedBy = "product")
+    private List<CartItem> cartItems;
+
     public Product(Long id, String name, String description, Double price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
-}}
+    }
+}
 

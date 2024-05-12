@@ -12,6 +12,8 @@ public class ProgettoCapstoneApplication {
 	}
 
 }
+
+
 //versione normale con security
 //package Averna.Giuseppe.Progetto.Capstone;
 //

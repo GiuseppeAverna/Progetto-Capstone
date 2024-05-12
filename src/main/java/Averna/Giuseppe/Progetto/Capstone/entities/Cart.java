@@ -1,6 +1,4 @@
 package Averna.Giuseppe.Progetto.Capstone.entities;
-
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +10,15 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "carts")
 public class Cart {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
-    private List<Product> products;
+    @OneToOne(mappedBy = "cart")
+    private User user;
 
-
+    @OneToMany(mappedBy = "cart")
+    private List<CartItem> cartItems;
 }

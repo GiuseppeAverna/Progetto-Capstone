@@ -1,10 +1,6 @@
 package Averna.Giuseppe.Progetto.Capstone.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -21,4 +17,15 @@ public class User {
 
     @Column(unique = true)
     private String email;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
+    private Cart cart;
+
+//    public User(Long id, String username, String password, String email) {
+//        this.id = id;
+//        this.username = username;
+//        this.password = password;
+//        this.email = email;
+//    }
 }
