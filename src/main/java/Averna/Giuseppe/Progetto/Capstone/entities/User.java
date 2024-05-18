@@ -1,31 +1,35 @@
 package Averna.Giuseppe.Progetto.Capstone.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
+import java.util.UUID;
 
 @Entity
-@Data
+@Table(name="users")
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true)
-    private String username;
-
-    private String password;
-
-    @Column(unique = true)
+    @GeneratedValue
+    private UUID id;
+    private String name;
+    private String surname;
     private String email;
+    private String password;
+    private String avatarURL;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 
-//    public User(Long id, String username, String password, String email) {
-//        this.id = id;
-//        this.username = username;
-//        this.password = password;
-//        this.email = email;
-//    }
+    public User(String name, String surname, String email, String password, String avatarURL) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+        this.avatarURL = avatarURL;
+    }
 }

@@ -1,44 +1,44 @@
 package Averna.Giuseppe.Progetto.Capstone.controllers;
 
+import Averna.Giuseppe.Progetto.Capstone.DTO.*;
+import Averna.Giuseppe.Progetto.Capstone.Payloads.UserLoginDTO;
+import Averna.Giuseppe.Progetto.Capstone.Payloads.UserLoginResponseDTO;
 import Averna.Giuseppe.Progetto.Capstone.entities.User;
+import Averna.Giuseppe.Progetto.Capstone.exceptions.BadRequestException;
 import Averna.Giuseppe.Progetto.Capstone.repositories.UserRepository;
 import Averna.Giuseppe.Progetto.Capstone.services.AuthService;
+import Averna.Giuseppe.Progetto.Capstone.services.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+    @Autowired
+    private AuthService authService;
 
-    private final UserRepository userRepository;
-    private final AuthService authService;
+    @Autowired
+    private UsersService usersService;
 
-    public AuthController(UserRepository userRepository, AuthService authService) {
-        this.userRepository = userRepository;
-        this.authService = authService;
+    @PostMapping("/login")
+    public UserLoginResponseDTO login(@RequestBody UserLoginDTO payload){
+        return new UserLoginResponseDTO(this.authService.authenticateUserAndGenerateToken(payload));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        // Implementa la logica di registrazione qui
-        // Potrebbe includere la validazione dei dati dell'utente e l'hashing della password
-        User newUser = authService.register(user);
-        return ResponseEntity.ok(newUser);
+    @ResponseStatus(HttpStatus.CREATED)
+    public NewUserRespDTO saveUser(@RequestBody @Validated NewUserDTO body, BindingResult validation){
+        // @Validated valida il payload in base ai validatori utilizzati nella classe NewUserDTO
+        // BindingResult validation ci serve per valutare il risultato di questa validazione
+        if(validation.hasErrors()) { // Se ci sono stati errori di validazione dovrei triggerare un 400 Bad Request
+            throw new BadRequestException(validation.getAllErrors()); // Inviamo la lista degli errori all'Error Handler opportuno
+        }
+        // Altrimenti se non ci sono stati errori posso salvare tranquillamente lo user
+        return new NewUserRespDTO(this.usersService.save(body).getId());
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        // Implementa la logica di login qui
-        // Potrebbe includere la verifica delle credenziali dell'utente e la generazione di un token di sessione
-        String token = authService.login(user);
-        return ResponseEntity.ok(token);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody User user) {
-        // Implementa la logica di logout qui
-        // Potrebbe includere l'invalidazione del token di sessione dell'utente
-        authService.logout(user);
-        return ResponseEntity.ok().build();
-    }
 }
