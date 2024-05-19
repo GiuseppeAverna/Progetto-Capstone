@@ -3,6 +3,9 @@ package Averna.Giuseppe.Progetto.Capstone.controllers;
 import Averna.Giuseppe.Progetto.Capstone.entities.Product;
 import Averna.Giuseppe.Progetto.Capstone.exceptions.ResourceNotFoundException;
 import Averna.Giuseppe.Progetto.Capstone.repositories.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
@@ -16,8 +19,10 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public Page<Product> getProducts(@RequestParam(required = false, defaultValue = "0") int page,
+                                     @RequestParam(required = false, defaultValue = "100") int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return productRepository.findAll(pageable);
     }
 
     @PostMapping("/products")
