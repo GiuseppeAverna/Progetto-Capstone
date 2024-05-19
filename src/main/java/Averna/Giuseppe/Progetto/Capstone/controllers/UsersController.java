@@ -1,6 +1,10 @@
 package Averna.Giuseppe.Progetto.Capstone.controllers;
 
+import Averna.Giuseppe.Progetto.Capstone.entities.Product;
 import Averna.Giuseppe.Progetto.Capstone.entities.User;
+import Averna.Giuseppe.Progetto.Capstone.exceptions.ResourceNotFoundException;
+import Averna.Giuseppe.Progetto.Capstone.repositories.ProductRepository;
+import Averna.Giuseppe.Progetto.Capstone.repositories.UserRepository;
 import Averna.Giuseppe.Progetto.Capstone.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,6 +24,14 @@ public class UsersController {
 
     @Autowired
     private UsersService usersService;
+
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
+
+    public UsersController(ProductRepository productRepository, UserRepository userRepository) {
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping
     // @PreAuthorize("hasAuthority('ADMIN')") // PreAuthorize serve per poter dichiarare delle regole di accesso
@@ -66,6 +78,17 @@ public class UsersController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable UUID userId){
         this.usersService.findByIdAndDelete(userId);
+    }
+
+    @PutMapping("/{userId}/cart/{productId}")
+    public User addToCart(@PathVariable UUID userId, @PathVariable Long productId) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+            user.getCart().add(product);
+           return userRepository.save(user);
     }
 
 }
