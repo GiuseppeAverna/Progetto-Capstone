@@ -29,9 +29,6 @@ public class User implements UserDetails {
     private String avatarURL;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id")
-    private Cart cart;
 
     public User(String name, String surname, String email, String password, String avatarURL) {
         this.name = name;

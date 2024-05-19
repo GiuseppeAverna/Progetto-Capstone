@@ -22,9 +22,6 @@ public class Product {
     private Double price;
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product")
-    private List<CartItem> cartItems;
-
     public Product(Long id, String name, String description, Double price, String imageUrl) {
         this.id = id;
         this.name = name;
