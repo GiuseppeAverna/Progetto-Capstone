@@ -1,4 +1,4 @@
-package Averna.Giuseppe.Progetto.Capstone.DTO;
+package Averna.Giuseppe.Progetto.Capstone.Payloads;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,11 +1,12 @@
 package Averna.Giuseppe.Progetto.Capstone.services;
 
-import Averna.Giuseppe.Progetto.Capstone.DTO.NewUserDTO;
+import Averna.Giuseppe.Progetto.Capstone.Payloads.NewUserDTO;
 import Averna.Giuseppe.Progetto.Capstone.entities.User;
 import Averna.Giuseppe.Progetto.Capstone.exceptions.BadRequestException;
 import Averna.Giuseppe.Progetto.Capstone.exceptions.NotFoundException;
 import Averna.Giuseppe.Progetto.Capstone.repositories.UsersDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,9 @@ import java.util.UUID;
 public class UsersService {
     @Autowired
     private UsersDAO usersDAO;
+
+    @Autowired
+    private PasswordEncoder bcrypt;
 
     public Page<User> getUsers(int page, int size, String sortBy){
         if(size > 100) size = 100;
@@ -34,7 +38,7 @@ public class UsersService {
                 }
         );
         // 3. Creo un nuovo oggetto User con i dati provenienti dal body
-        User newUser = new User(body.name(), body.surname(), body.email(), body.password(),
+        User newUser = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()),
                 "https://ui-avatars.com/api/?name="+ body.name() + "+" + body.surname());
 
         // 4. Salvo lo user
@@ -59,7 +63,9 @@ public class UsersService {
         User found = this.findById(userId);
         this.usersDAO.delete(found);
     }
+
     public User findByEmail(String email) {
         return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
     }
+
 }

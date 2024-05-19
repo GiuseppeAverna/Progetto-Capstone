@@ -1,11 +1,10 @@
 package Averna.Giuseppe.Progetto.Capstone.controllers;
 
-import Averna.Giuseppe.Progetto.Capstone.DTO.*;
+import Averna.Giuseppe.Progetto.Capstone.Payloads.NewUserDTO;
+import Averna.Giuseppe.Progetto.Capstone.Payloads.NewUserRespDTO;
 import Averna.Giuseppe.Progetto.Capstone.Payloads.UserLoginDTO;
 import Averna.Giuseppe.Progetto.Capstone.Payloads.UserLoginResponseDTO;
-import Averna.Giuseppe.Progetto.Capstone.entities.User;
 import Averna.Giuseppe.Progetto.Capstone.exceptions.BadRequestException;
-import Averna.Giuseppe.Progetto.Capstone.repositories.UserRepository;
 import Averna.Giuseppe.Progetto.Capstone.services.AuthService;
 import Averna.Giuseppe.Progetto.Capstone.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/auth")

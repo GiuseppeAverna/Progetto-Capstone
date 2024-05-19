@@ -1,11 +1,10 @@
 package Averna.Giuseppe.Progetto.Capstone.security;
-
-import Averna.Giuseppe.Progetto.Capstone.entities.User;
-import Averna.Giuseppe.Progetto.Capstone.exceptions.UnauthorizedException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import Averna.Giuseppe.Progetto.Capstone.entities.User;
+import Averna.Giuseppe.Progetto.Capstone.exceptions.UnauthorizedException;
 
 import java.util.Date;
 
@@ -14,6 +13,9 @@ public class JWTTools {
 
     @Value("${jwt.secret}")
     private String secret;
+
+    @Value("${jwt.expiresIn}")
+    private String expiresIn;
 
     public String createToken(User user){
         return Jwts.builder()
@@ -24,9 +26,9 @@ public class JWTTools {
                 // millisecondi
                 .expiration(
                         new Date(
-                                System.currentTimeMillis()
-                                        + 1000 * 60 * 60 * 24
-                                        * 7)) // Data di scadenza del token (Expiration Date) in millisecondi
+                                System.currentTimeMillis() +
+                                1000 * 60 * 60 * 24
+                                        *  + 7)) // Data di scadenza del token (Expiration Date) in millisecondi
                 .subject(
                         String.valueOf(
                                 user.getId())) // Subject, ovvero a chi appartiene il token (Attenzione a non
@@ -46,6 +48,11 @@ public class JWTTools {
             throw new UnauthorizedException("Problemi col token! Per favore effettua di nuovo il login!");
             // Non importa quale eccezione verrà lanciata da .parse(), a me alla fine interessa che tutte come risultato abbiano 401
         }
+    }
 
+    public String extractIdFromToken(String token){
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .build().parseSignedClaims(token).getPayload().getSubject(); // Il subject è l'id dell'utente
     }
 }
