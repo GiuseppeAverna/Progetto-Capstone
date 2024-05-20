@@ -80,7 +80,7 @@ public class UsersController {
         this.usersService.findByIdAndDelete(userId);
     }
 
-    @PutMapping("/{userId}/cart/{productId}")
+    @PutMapping("/{userId}/addToCart/{productId}")
     public User addToCart(@PathVariable UUID userId, @PathVariable Long productId) {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -89,6 +89,18 @@ public class UsersController {
 
             user.getCart().add(product);
            return userRepository.save(user);
+    }
+
+    @PutMapping("/{userId}/removeFromCart/{productId}")
+    public User removeFromCart(@PathVariable UUID userId, @PathVariable Long productId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        user.getCart().remove(product);
+        System.out.println((user.getCart()));
+        return userRepository.save(user);
     }
 
 }
