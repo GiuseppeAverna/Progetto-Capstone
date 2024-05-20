@@ -48,4 +48,6 @@ public class ReviewController {
                     return reviewRepository.save(review);
                 }).orElseThrow(() -> new ResourceNotFoundException("Recensione con Id " + id + " non trovata"));
     }
-}
+//
+//    @PutMapping("/reviews/{productId}")
+//}

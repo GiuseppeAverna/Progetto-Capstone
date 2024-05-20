@@ -99,7 +99,15 @@ public class UsersController {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         user.getCart().remove(product);
-        System.out.println((user.getCart()));
+        return userRepository.save(user);
+    }
+
+    @PutMapping("/{userId}/clearCart")
+    public User clearCart(@PathVariable UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        user.getCart().clear();
         return userRepository.save(user);
     }
 

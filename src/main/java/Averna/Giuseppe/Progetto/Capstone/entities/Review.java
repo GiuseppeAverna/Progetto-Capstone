@@ -20,7 +20,7 @@ public class Review {
     private Long id;
 
     private Long productId;
-    private String productName; // Aggiunto il campo productName
+    private String productName;
     private int rating;
     private String reviewText;
 
