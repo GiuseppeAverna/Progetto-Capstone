@@ -26,5 +26,4 @@ public class ProgettoCapstoneApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ProgettoCapstoneApplication.class, args);
 	}
-
 }
