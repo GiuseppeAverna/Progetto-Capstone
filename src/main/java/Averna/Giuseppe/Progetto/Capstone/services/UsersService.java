@@ -30,18 +30,18 @@ public class UsersService {
     }
 
     public User save(NewUserDTO body){
-        // 1. Verifico se l'email è già in uso
+
         this.usersDAO.findByEmail(body.email()).ifPresent(
-                // 2. Se lo è triggero un errore
+
                 user -> {
                     throw new BadRequestException("L'email " + user.getEmail() + " è già in uso!");
                 }
         );
-        // 3. Creo un nuovo oggetto User con i dati provenienti dal body
+
         User newUser = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()),
                 "https://ui-avatars.com/api/?name="+ body.name() + "+" + body.surname());
 
-        // 4. Salvo lo user
+
         return usersDAO.save(newUser);
     }
 

@@ -22,19 +22,18 @@ public class JWTTools {
                 .issuedAt(
                         new Date(
                                 System
-                                        .currentTimeMillis())) // Data di emissione del token (IAT - Issued AT) in
-                // millisecondi
+                                        .currentTimeMillis()))
+
                 .expiration(
                         new Date(
                                 System.currentTimeMillis() +
                                 1000 * 60 * 60 * 24
-                                        *  + 7)) // Data di scadenza del token (Expiration Date) in millisecondi
+                                        *  + 7))
                 .subject(
                         String.valueOf(
-                                user.getId())) // Subject, ovvero a chi appartiene il token (Attenzione a non
-                // mettere info sensibili)
+                                user.getId()))
                 .signWith(
-                        Keys.hmacShaKeyFor(secret.getBytes())) // Firmo il token con algoritmo HMAC passandogli il SEGRETO
+                        Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
     }
 
@@ -43,10 +42,10 @@ public class JWTTools {
             Jwts.parser()
                     .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
                     .build().parse(token);
-            // Il metodo .parse(token) mi lancerà delle eccezioni in caso di token scaduto o token manipolato
+
         } catch (Exception ex) {
             throw new UnauthorizedException("Problemi col token! Per favore effettua di nuovo il login!");
-            // Non importa quale eccezione verrà lanciata da .parse(), a me alla fine interessa che tutte come risultato abbiano 401
+
         }
     }
 

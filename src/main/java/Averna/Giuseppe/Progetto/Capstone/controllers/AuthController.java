@@ -30,12 +30,11 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public NewUserRespDTO saveUser(@RequestBody @Validated NewUserDTO body, BindingResult validation){
-        // @Validated valida il payload in base ai validatori utilizzati nella classe NewUserDTO
-        // BindingResult validation ci serve per valutare il risultato di questa validazione
-        if(validation.hasErrors()) { // Se ci sono stati errori di validazione dovrei triggerare un 400 Bad Request
-            throw new BadRequestException(validation.getAllErrors()); // Inviamo la lista degli errori all'Error Handler opportuno
+
+        if(validation.hasErrors()) {
+            throw new BadRequestException(validation.getAllErrors());
         }
-        // Altrimenti se non ci sono stati errori posso salvare tranquillamente lo user
+
         return new NewUserRespDTO(this.usersService.save(body).getId());
     }
 

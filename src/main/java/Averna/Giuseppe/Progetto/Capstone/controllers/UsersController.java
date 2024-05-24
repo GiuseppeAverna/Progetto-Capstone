@@ -35,7 +35,7 @@ public class UsersController {
 
     @GetMapping
     // @PreAuthorize("hasAuthority('ADMIN')") // PreAuthorize serve per poter dichiarare delle regole di accesso
-    // all'endpoint basandoci sul ruolo dell'utente. In questo caso solo gli ADMIN possono accedere
+
     public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "10") int size,
                                   @RequestParam(defaultValue = "id") String sortBy) {
@@ -44,9 +44,7 @@ public class UsersController {
 
     @GetMapping("/me")
     public User getProfile(@AuthenticationPrincipal User currentAuthenticatedUser){
-        // @AuthenticationPrincipal mi consente di accedere all'utente attualmente autenticato
-        // Questa cosa è resa possibile dal fatto che precedentemente a questo endpoint (ovvero nel JWTFilter)
-        // ho estratto l'id dal token e sono andato nel db per cercare l'utente ed "associarlo" a questa richiesta
+
         return currentAuthenticatedUser;
     }
 
@@ -68,13 +66,13 @@ public class UsersController {
     }
 
     @PutMapping("/{userId}")
-    // @PreAuthorize("hasAuthority('ADMIN')")
+
     public User findByIdAndUpdate(@PathVariable UUID userId, @RequestBody User body){
         return this.usersService.findByIdAndUpdate(userId, body);
     }
 
     @DeleteMapping("/{userId}")
-    // @PreAuthorize("hasAuthority('ADMIN')")
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable UUID userId){
         this.usersService.findByIdAndDelete(userId);
